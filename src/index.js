@@ -1,5 +1,5 @@
-import { empty } from './lib/elements.js';
-import { renderDetails, renderFrontpage, searchAndRender } from './lib/ui.js';
+import { empty } from "./lib/elements.js";
+import { renderDetails, renderFrontpage, searchAndRender } from "./lib/ui.js";
 
 /**
  * Fall sem keyrir við leit.
