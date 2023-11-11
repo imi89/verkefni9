@@ -172,18 +172,57 @@ export async function renderDetails(parentElement, id) {
   const backElement = el(
     'div',
     { class: 'back' },
-    el('a', { href: '/' }, 'Til baka')
+    el('a', { href: '/', class: 'back-link' }, 'Til baka')
   );
+  container.appendChild(backElement);
 
   parentElement.appendChild(container);
 
   /* TODO setja loading state og sækja gögn */
 
-  // Tómt og villu state, við gerum ekki greinarmun á þessu tvennu, ef við
-  // myndum vilja gera það þyrftum við að skilgreina stöðu fyrir niðurstöðu
-  if (!result) {
-    /* TODO útfæra villu og tómt state */
-  }
+  // Setur loading state á meðan gögn eru sótt
+  setLoading(parentElement, container);
 
-  /* TODO útfæra ef gögn */
+  let result;
+  try {
+    // Sækir gögnin fyrir geimskotið með ID
+    result = await getLaunch(id);
+
+    // Fjarlægir loading state þegar gögn hafa verið sótt
+    setNotLoading(parentElement, container);
+
+    if (result) {
+      // Býr til og bætir upplýsingum um geimskot við container
+      const launchDetails = el(
+        'div',
+        { class: 'launch-details' },
+        el('h1', {}, result.name),
+        el('p', {}, `Gluggi: ${result.window_start} - ${result.window_end}`),
+        el('img', { src: result.image, alt: `Mynd af ${result.name}` }),
+        el(
+          'p',
+          {},
+          `Staða: ${result.status.name} - ${result.status.description}`
+        ),
+        el(
+          'p',
+          {},
+          `Verkefni: ${result.mission.name} - ${result.mission.description}`
+        )
+      );
+      container.appendChild(launchDetails);
+    } else {
+      // Býr til og bætir við skilaboðum um að ekkert geimskot fannst
+      container.appendChild(
+        el('p', {}, 'Engin gögn fundust fyrir þetta geimskot.')
+      );
+    }
+  } catch (error) {
+    // Fjarlægir loading state og bætir við villuskilaboðum ef villa kom upp
+    setNotLoading(parentElement, container);
+    console.error('Villa við að sækja gögn:', error);
+    container.appendChild(
+      el('p', { class: 'error' }, 'Villa kom upp við að sækja upplýsingar.')
+    );
+  }
 }
