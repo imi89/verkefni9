@@ -20,5 +20,6 @@ yarn-error.log*
 .env
 
 # Mögulegar þýddar skrár fyrir production build
-build/
+build
 dist/
+
