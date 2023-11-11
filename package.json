@@ -5,6 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "browser-sync start --server --files ./src/ styles.css index.html",
+    "copy:html": "cpy ./*.html ./build/",
+    "copy:css": "cpy ./styles.css ./build/",
+    "copy:src": "cpy ./src/index.js ./build",
+    "build": "concurrently npm:copy:*",
     "lint": "eslint ./**/*.js",
     "prettier": "prettier --write ."
   },
